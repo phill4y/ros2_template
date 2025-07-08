@@ -1,0 +1,9 @@
+services:
+  devcontainer-jazzy:
+    image: ${IMG_NAME_DEVCONTAINER_JAZZY}-${PLATFORM}:${IMAGE_TAG:-latest}
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.jazzy
+      cache_from:
+        - ${IMG_NAME_DEVCONTAINER_JAZZY}-${PLATFORM}:latest
+    env_file: .env

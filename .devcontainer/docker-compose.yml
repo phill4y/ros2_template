@@ -1,0 +1,39 @@
+services:
+  devcontainer-user:
+    image: ${SELECTED_DEVCONTAINER}_${USER}:latest
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.user
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+        - BASE_IMAGE_NAME=${SELECTED_DEVCONTAINER}
+        - PLATFORM=${PLATFORM}
+    env_file: .env
+    tty: true
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    volumes:
+      # - ~/.config/Code:/home/ubuntu/Code
+      - ../:/ws
+      - ~/.gitconfig:/etc/gitconfig
+      - ~/.zsh_history:/home/ubuntu/.zsh_history
+      - ~/.ssh:/home/ubuntu/.ssh
+      - ~/.Xauthority:/home/ubuntu/.Xauthority
+      - ~/.gz:/home/ubuntu/.gz
+      - ~/ccache:/ccache
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      - CCACHE_DIR=/ccache
+      - DISPLAY
+      - XAUTHORITY
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TERM=xterm-256color
+      - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - CYCLONEDDS_URI=/ws/cyclonedds.xml
+    runtime: "${CONTAINER_RUNTIME}"

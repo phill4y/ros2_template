@@ -1,0 +1,66 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+    -   id: check-yaml
+        exclude: '(\.gitlab-ci\.yml|\.gitlab/.*\.yml)$'
+    -   id: trailing-whitespace
+        # exclude:
+
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        description: Format files with clang-format.
+        entry: clang-format-18
+        language: system
+        args: ['-fallback-style=none', '-style=file', '-assume-filename=/ws/.clang-format', '-i']
+        types_or: [c, c++]
+
+      - id: cppcheck
+        name: cppcheck
+        description: SCA tool for C/C++ code.
+        entry: cppcheck
+        language: system
+        args: ['--language=c++', '--std=c++14']
+        types_or: [c, c++]
+
+      - id: shellcheck
+        name: shellcheck
+        description: SCA tool for shell scripts
+        entry: shellcheck
+        language: system
+        args: ['-x', '-C', '-o', 'all']
+        types: [shell]
+
+      # We need to use --force-exclude because pre-commit will call ruff with explicit paths
+      # and by design ruff will ignore the exclude paths property if called that way
+      - id: ruff_format
+        name: ruff_format
+        description: Python formatter
+        entry: ruff format --force-exclude
+        language: system
+        types_or: [python, pyi]
+
+      - id: ruff_check
+        name: ruff_check
+        description: Python linter
+        entry: ruff check
+        language: system
+        types_or: [python, pyi]
+
+      - id: pyright
+        name: pyright
+        description: Python type checker
+        entry: pyright
+        args: []
+        language: python
+        types_or: [python, pyi]
+
+      - id: cmake-format
+        name: cmake-format
+        description: CMake formatter
+        entry: cmake-format
+        args: [--in-place]
+        language: python
+        types: [cmake]

@@ -1,0 +1,58 @@
+ARG BASE_IMAGE_NAME
+ARG PLATFORM
+
+FROM ${BASE_IMAGE_NAME}-${PLATFORM}:latest
+
+ARG UID=1000
+ARG GID=$UID
+
+ENV PATH=/usr/lib/ccache:${PATH}
+
+# Ubuntu noble already contains a user with UID 1000 and GID 1000 named ubuntu
+# Create non-root user
+# (-l: Do not add the user to the lastlog and faillog databases - avoid issues with large UIDS)
+RUN apt-get update && apt-get install -y sudo \
+    && echo $USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER \
+    && chmod 0440 /etc/sudoers.d/$USER
+
+# Change default shell to zsh
+RUN chsh -s /usr/bin/zsh $USER
+
+# Switch to local user
+USER $USER
+
+# Setup oh-my-zsh + plugins
+RUN curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh \
+    && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-"/home/$USER/.oh-my-zsh/custom"}/themes/powerlevel10k" \
+    && git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-"/home/$USER/.oh-my-zsh/custom"}/plugins/zsh-syntax-highlighting" \
+    && git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-"/home/$USER/.oh-my-zsh/custom"}/plugins/zsh-autosuggestions" \
+    && "${ZSH_CUSTOM:-"/home/$USER/.oh-my-zsh/custom"}/themes/powerlevel10k/gitstatus/install"
+
+# Setup GDB pretty-printers for eigen
+COPY --chown=$USER:$USER .devcontainer/gdb/printers /opt/gdb/printers
+COPY --chown=$USER:$USER .devcontainer/gdb/.gdbinit /home/$USER/.gdbinit
+
+# Copy zsh config files
+COPY --chown=$USER:$USER .devcontainer/zsh/* /home/$USER/
+
+# Setup fzf fuzzy search for zsh and bash
+RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/$USER/.fzf && /home/$USER/.fzf/install --all
+
+# Source ROS setup.sh when new terminal is launched
+RUN echo "source ${ROS_SETUP_SCRIPT}" >> ~/.zshrc
+
+# Source ros2 workspace
+RUN echo "source /ws/ros2/ros2_ws/install/setup.sh || true" >> ~/.zshrc
+
+# Setup aliases
+RUN --mount=type=bind,source=.devcontainer/config/aliases.txt,target=/tmp/aliases.txt \
+    cat /tmp/aliases.txt >> ~/.zshrc
+
+WORKDIR /ws
+
+# Setup pre-commit hooks using entrypoint script
+COPY --chown=$USER:$USER .devcontainer/scripts/00_devcontainer_entrypoint.sh /00_devcontainer_entrypoint.sh
+RUN chmod +x /00_devcontainer_entrypoint.sh
+ENTRYPOINT ["/00_devcontainer_entrypoint.sh"]
+
+CMD ["zsh"]

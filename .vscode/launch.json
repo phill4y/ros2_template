@@ -1,0 +1,133 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "DEV_ENV": "true"
+            }
+            // "args": [
+            //   "--ros-args",
+            //   "-p",
+            //   "use_sim_time:=true"
+            // ]
+        },
+        {
+            "name": "ROS2 Node",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/ws/ros2/ros2_ws/install/${input:package_name}/lib/${input:package_name}/${input:node_name}",
+            "args": [
+                "--ros-args",
+                "--params-file",
+                "/ws/ros2/ros2_ws/install/${input:package_name}/share/${input:package_name}/config/config.yml"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                },
+            ]
+        },
+        {
+            "name": "ROS2 Unit Test",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/ws/ros2/ros2_ws/build/${input:package_name}/${input:test_executable}",
+            // "args": [
+            //     "--gtest_filter=${input:test_suite}.${input:test_name}"
+            // ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                },
+            ]
+        },
+        {
+            "name": "CTest",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${cmake.testProgram}",
+            "args": [
+                "${cmake.testArgs}"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                },
+            ]
+        },
+    ],
+    "inputs": [
+        {
+            "id": "package_name",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "python3 /ws/.vscode/get_packages.py",
+                "useSingleResult": false
+            }
+        },
+        {
+            "id": "node_name",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "python3 /ws/.vscode/get_executables.py ${input:package_name}",
+                "useSingleResult": false
+            }
+        },
+        {
+            "id": "test_executable",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "ls /ws/ros2/ros2_ws/build/${input:package_name} | grep '^test_'",
+                "useSingleResult": false
+            }
+        }
+    ]
+}

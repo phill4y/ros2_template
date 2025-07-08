@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CycloneDDS xmlns="https://cdds.io/config">
+  <Domain>
+    <!-- Enable SharedMemory usage -->
+    <!-- <SharedMemory>
+      <Enable>true</Enable>
+      <LogLevel>info</LogLevel>
+    </SharedMemory> -->
+    <!-- For enabling multicast on loopback: "sudo ip l set lo multicast on" -->
+    <General>
+      <!-- Use loopback interface only -->
+      <Interfaces>
+        <NetworkInterface name="lo"/>
+      </Interfaces>
+      <AllowMulticast>true</AllowMulticast>
+    </General>
+    <Discovery>
+      <!-- Avoid participant index conflicts -->
+      <ParticipantIndex>none</ParticipantIndex>
+    </Discovery>
+  </Domain>
+</CycloneDDS>

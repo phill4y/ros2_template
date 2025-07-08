@@ -1,0 +1,17 @@
+{
+    "reportMissingImports": false,
+    "reportMissingModuleSource": false,
+    "reportPrivateImportUsage": false,
+    "reportPossiblyUnboundVariable": false,
+    "reportAttributeAccessIssue": false,
+    // "typeCheckingMode": "strict",
+    // "reportAttributeAccessIssue": false,
+    // "reportAssignmentType": false
+    "exclude": [
+        "py/**",
+        "**/build",
+        "**/dist",
+        "**/.venv",
+        "**/__pycache__"
+    ]
+}

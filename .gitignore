@@ -1,0 +1,11 @@
+# Devcontainer
+.devcontainer/.env
+
+# ROS2
+ros2/ros2_ws/build/
+ros2/ros2_ws/log/
+ros2/ros2_ws/install/
+
+# Python
+venv/
+__pycache__/

@@ -1,0 +1,11 @@
+# === Goal ===
+
+bool a_bool
+---
+# === Result ===
+
+bool success
+---
+# === Feedback ===
+
+float32 feedback

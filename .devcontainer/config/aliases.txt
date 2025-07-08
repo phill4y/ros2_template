@@ -1,0 +1,12 @@
+# Colcon
+alias cbps="colcon build --continue-on-error --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release --symlink-install  --packages-select"
+alias cbput="colcon build --continue-on-error --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release --symlink-install --packages-up-to"
+alias cbpsdbg="colcon build --continue-on-error --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug --symlink-install --packages-select"
+alias cbputdbg="colcon build --continue-on-error --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug --symlink-install --packages-up-to"
+alias cbpsv="colcon build --continue-on-error --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release --event-handlers console_direct+ --symlink-install --packages-select"
+alias cbputv="colcon build --continue-on-error --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release --event-handlers console_direct+ --symlink-install --packages-up-to"
+alias ctps="colcon test --event-handlers console_direct+ --return-code-on-test-failure --packages-select"
+alias ctput="colcon test --event-handlers console_direct+ --return-code-on-test-failure --packages-up-to"
+
+# ROS2
+alias sw="source /ws/ros2/ros2_ws/install/setup.sh"

@@ -2,10 +2,10 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
-    -   id: check-yaml
-        exclude: '(\.gitlab-ci\.yml|\.gitlab/.*\.yml)$'
-    -   id: trailing-whitespace
-        # exclude:
+    - id: check-yaml
+      exclude: '(\.gitlab-ci\.yml|\.gitlab/.*\.yml)$'
+    - id: trailing-whitespace
+    - id: check-json
 
   - repo: local
     hooks:
